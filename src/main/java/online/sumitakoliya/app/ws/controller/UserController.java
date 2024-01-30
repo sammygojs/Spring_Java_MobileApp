@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import jakarta.validation.Valid;
 import online.sumitakoliya.app.ws.model.request.UpdateUserDetailsRequestModel;
 import online.sumitakoliya.app.ws.model.request.UserDetailsRequestModel;
 import online.sumitakoliya.app.ws.model.response.UserRest;
+import online.sumitakoliya.app.ws.userservice.UserService;
+import online.sumitakoliya.app.ws.userservice.impl.UserServiceImpl;
 import online.sumitakoliya.app.ws.exceptions.UserServiceException;
 
 @RestController
@@ -28,6 +31,9 @@ import online.sumitakoliya.app.ws.exceptions.UserServiceException;
 public class UserController {
 	
 	Map<String, UserRest> users;
+	
+	@Autowired
+	UserService userService;
 	
 	@GetMapping
 	public String getUsers(@RequestParam(value="page", defaultValue="1")int page,
@@ -70,17 +76,13 @@ public class UserController {
 	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
 //		return "create user was called";
 		
-		UserRest returnValue = new UserRest();
-		returnValue.setFirstName(userDetails.getFirstName());
-		returnValue.setLastName(userDetails.getLastName());
-		returnValue.setEmail(userDetails.getEmail());
+//		Before DI
+//		UserRest returnValue = new UserServiceImpl().createUser(userDetails); 
 		
-
-		String userId = UUID.randomUUID().toString();
-		returnValue.setUserId(userId);
+//		Using @Autowired
 		
-		if(users==null) users=new HashMap<>();
-		users.put(userId, returnValue);
+		UserRest returnValue = userService.createUser(userDetails);
+//		users.put(returnValue.getUserId(), returnValue);
 		
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
 	}

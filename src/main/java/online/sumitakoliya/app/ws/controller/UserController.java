@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import online.sumitakoliya.app.ws.model.request.UpdateUserDetailsRequestModel;
 import online.sumitakoliya.app.ws.model.request.UserDetailsRequestModel;
 import online.sumitakoliya.app.ws.model.response.UserRest;
+import online.sumitakoliya.app.ws.exceptions.UserServiceException;
 
 @RestController
 @RequestMapping("/users")	//http://localhost:8080/users
@@ -44,8 +45,11 @@ public class UserController {
 //	String
 	getUser(@PathVariable String userId) {
 		
-		String fname = null;
-		int len = fname.length(); 
+//		String fname = null;
+//		int len = fname.length(); 
+		
+		if(true) throw new UserServiceException("A user service exception is thrown");
+		
 //		UserRest returnValue = new UserRest();
 //		returnValue.setFirstName("a");
 //		returnValue.setLastName("b");
